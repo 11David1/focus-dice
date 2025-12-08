@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <title>Focus Dice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              mint: {
+                50: '#F2F9F6',
+                100: '#E0F2EB',
+                200: '#C2E5D8',
+                300: '#94D1BD',
+                400: '#5FB69C',
+                500: '#3A967B', // Primary Brand Color
+                600: '#2C7A63',
+                700: '#256150',
+                800: '#214E41',
+                900: '#1D4138',
+                950: '#0F2621', // Deep Dark Mode BG
+              },
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+            },
+            animation: {
+              'bounce-gentle': 'bounce-gentle 2s infinite',
+              'spin-slow': 'spin 3s linear infinite',
+              'breathe': 'breathe 16s infinite ease-in-out', // 4s in, 4s hold, 4s out, 4s hold
+            },
+            keyframes: {
+              'bounce-gentle': {
+                '0%, 100%': { transform: 'translateY(-5%)' },
+                '50%': { transform: 'translateY(0)' },
+              },
+              'breathe': {
+                '0%': { transform: 'scale(0.8)', opacity: '0.6' },        // Start Inhale
+                '25%': { transform: 'scale(1.5)', opacity: '1' },         // End Inhale
+                '50%': { transform: 'scale(1.5)', opacity: '1' },         // End Hold
+                '75%': { transform: 'scale(0.8)', opacity: '0.6' },       // End Exhale
+                '100%': { transform: 'scale(0.8)', opacity: '0.6' }       // End Hold
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        -webkit-tap-highlight-color: transparent;
+        background-color: #F2F9F6; /* mint-50 */
+      }
+      /* Dark mode body background helper */
+      .dark body {
+        background-color: #0F2621; /* mint-950 */
+      }
+      
+      /* Hide scrollbar for clean UI */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+      
+      /* Confetti Animation */
+      @keyframes confetti-fall {
+        0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+      }
+      @keyframes confetti-sway {
+        0%, 100% { margin-left: 0; }
+        50% { margin-left: 25px; }
+      }
+      .animate-confetti {
+        animation: confetti-fall linear forwards;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
