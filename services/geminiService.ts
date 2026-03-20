@@ -1,10 +1,15 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { Challenge, Category } from "../types";
 
-// Fallback if env is missing, though app is designed to work offline mostly.
-const API_KEY = process.env.API_KEY || '';
+// Resolve API key safely across web/native without assuming process.env exists.
+const resolveApiKey = (): string => {
+  if (typeof process !== 'undefined' && process.env?.API_KEY) return process.env.API_KEY;
+  if (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+  return '';
+};
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const API_KEY = resolveApiKey();
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 const challengeSchema: Schema = {
   type: Type.OBJECT,
@@ -22,7 +27,7 @@ const challengeSchema: Schema = {
 };
 
 export const generateAiChallenge = async (): Promise<Challenge | null> => {
-  if (!API_KEY) return null;
+  if (!API_KEY || !ai) return null;
 
   try {
     const response = await ai.models.generateContent({

@@ -4,10 +4,19 @@ const STORAGE_KEY_HISTORY = 'focus_dice_history_v1';
 const STORAGE_KEY_CUSTOM = 'focus_dice_custom_challenges_v1';
 const STORAGE_KEY_SETTINGS = 'focus_dice_settings_v1';
 
+// Generate a stable ID even if crypto.randomUUID is unavailable
+const generateId = (): string => {
+  try {
+    return crypto.randomUUID();
+  } catch {
+    return `local-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+  }
+};
+
 // History / Completions
-export const saveCompletion = (challenge: Challenge, note?: string): void => {
+export const saveCompletion = (challenge: Challenge, note?: string): Completion[] => {
   const completion: Completion = {
-    id: crypto.randomUUID(),
+    id: generateId(),
     timestamp: Date.now(),
     challengeId: challenge.id,
     category: challenge.category,
@@ -15,10 +24,16 @@ export const saveCompletion = (challenge: Challenge, note?: string): void => {
   };
 
   const existing = getCompletions();
-  const updated = [completion, ...existing];
-  const trimmed = updated.slice(0, 1000); 
-  
-  localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(trimmed));
+  const updated = [completion, ...existing].slice(0, 1000);
+
+  // Persist best-effort; return in-memory result even if storage fails
+  try {
+    localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(updated));
+  } catch (e) {
+    console.warn('Failed to persist completion history', e);
+  }
+
+  return updated;
 };
 
 export const getCompletions = (): Completion[] => {

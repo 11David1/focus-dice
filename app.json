@@ -1,9 +1,21 @@
 {
   "expo": {
+    "icon": "./assets/icon.png",
     "extra": {
       "eas": {
         "projectId": "60f9cee7-4837-4a5c-9ed1-f604111d3ef3"
       }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./assets/icon.png",
+      "bundleIdentifier": "com.davidmosb.focusdice",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.davidmosb.focusdice"
     }
   }
 }

@@ -41,12 +41,17 @@ const App: React.FC = () => {
 
   // Journaling State
   const [journalEntry, setJournalEntry] = useState('');
-  
+
   // Filter
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   // Environment
-  const hasApiKey = !!process.env.API_KEY;
+  const resolvedApiKey = (() => {
+    if (typeof process !== 'undefined' && process.env?.API_KEY) return process.env.API_KEY;
+    if (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+    return '';
+  })();
+  const hasApiKey = !!resolvedApiKey;
 
   // --- EFFECTS ---
 
@@ -186,15 +191,14 @@ const App: React.FC = () => {
     triggerHaptic();
     // Save with journal entry if exists
     const entryText = journalEntry.trim() ? journalEntry.trim() : undefined;
-    saveCompletion(currentChallenge, entryText);
-    
+    const newData = saveCompletion(currentChallenge, entryText);
+
     // NOTIFICATION LOGIC:
     // If it is the "Top Goal" challenge (id: 'j3') and the user wrote something, schedule a check.
     if (currentChallenge.id === 'j3' && entryText) {
       scheduleGoalCheck(entryText);
     }
     
-    const newData = getCompletions();
     setCompletions(newData);
     setStreak(getStreak(newData));
 
